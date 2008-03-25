@@ -1,5 +1,5 @@
 require "rubygems"
-require "actionmailer"
+require "action_mailer"
 
 ActionMailer::Base.class_eval do
   private
