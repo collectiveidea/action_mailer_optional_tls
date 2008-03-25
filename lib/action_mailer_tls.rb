@@ -1,5 +1,6 @@
 require "rubygems"
-gem "actionmailer"
+require "actionmailer"
+
 ActionMailer::Base.class_eval do
   private
   def perform_delivery_smtp(mail)
