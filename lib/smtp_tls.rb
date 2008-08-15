@@ -6,13 +6,13 @@ Net::SMTP.class_eval do
   def self.start( address, port = nil,
                   helo = 'localhost.localdomain',
                   user = nil, secret = nil, authtype = nil, use_tls = false,
-                  &block) # :yield: smtp
-    new(address, port).start(helo, user, secret, authtype, use_tls, &block)
+                  use_ssl = false, &block) # :yield: smtp
+    new(address, port).start(helo, user, secret, authtype, use_tls, use_ssl, &block)
   end
 
   def start( helo = 'localhost.localdomain',
-             user = nil, secret = nil, authtype = nil, use_tls = false ) # :yield: smtp
-    start_method = use_tls ? :do_tls_start : :do_start
+             user = nil, secret = nil, authtype = nil, use_tls = false, use_ssl = false ) # :yield: smtp
+    start_method = use_tls ? :do_tls_start : use_ssl ? :do_ssl_start : :do_start
     if block_given?
       begin
         send start_method, helo, user, secret, authtype
@@ -48,6 +48,34 @@ Net::SMTP.class_eval do
     @socket = Net::InternetMessageIO.new(ssl)
     @socket.read_timeout = 60 #@read_timeout
     @socket.debug_output = STDERR #@debug_output
+    do_helo(helodomain)
+
+    authenticate user, secret, authtype if user
+    @started = true
+  ensure
+    unless @started
+      # authentication failed, cancel connection.
+        @socket.close if not @started and @socket and not @socket.closed?
+      @socket = nil
+    end
+  end
+
+  def do_ssl_start(helodomain, user, secret, authtype)
+    raise IOError, 'SMTP session already started' if @started
+    check_auth_args user, secret, authtype if user or secret
+
+    sock = timeout(@open_timeout) { TCPSocket.open(@address, @port) }
+    raise 'openssl library not installed' unless defined?(OpenSSL)
+    ssl = OpenSSL::SSL::SSLSocket.new(sock)
+    ssl.sync_close = true
+    ssl.connect
+    @socket = Net::InternetMessageIO.new(ssl)
+    @socket.read_timeout = 60 #@read_timeout
+    @socket.debug_output = STDERR #@debug_output
+
+    check_response(critical { recv_response() })
+    do_helo(helodomain)
+
     do_helo(helodomain)
 
     authenticate user, secret, authtype if user

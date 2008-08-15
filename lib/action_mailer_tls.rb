@@ -8,7 +8,8 @@ ActionMailer::Base.class_eval do
     mail.ready_to_send
 
     Net::SMTP.start(smtp_settings[:address], smtp_settings[:port], smtp_settings[:domain], 
-        smtp_settings[:user_name], smtp_settings[:password], smtp_settings[:authentication], smtp_settings[:tls]) do |smtp|
+        smtp_settings[:user_name], smtp_settings[:password], smtp_settings[:authentication],
+        smtp_settings[:tls], smtp_settings[:ssl]) do |smtp|
       smtp.sendmail(mail.encoded, mail.from, destinations)
     end
   end
