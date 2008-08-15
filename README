@@ -5,7 +5,7 @@ Allows Google Mail SMTP to be used with Ruby on Rails' ActionMailer.
 == Install
   ./script/plugin install http://svn.douglasfshearer.com/rails/plugins/action_mailer_optional_tls
 
-== Confugure
+== Configure
 
 Add the following to your environment.rb file:
 
