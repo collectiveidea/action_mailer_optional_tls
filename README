@@ -30,3 +30,5 @@ This useful plugin is hosted at http://douglasfshearer.com as a public service, 
 Douglas F Shearer is neither the creator nor maintainer of this work, so if it's broke, it's broke.
 
 Created by Kyle Maxwell - http://kylemaxwell.com/
+
+Forked and adjusted by Nathan L. Walls - http://wallscorp.us/ to resolve the issue describe here: http://blog.inspired.no/smtp-error-while-using-gmail-in-rails-271 and satisfy differences between Ruby 1.8.6 and Ruby 1.8.7. Note: this is brittle, but solves a need.
