@@ -1,15 +1,20 @@
 require "rubygems"
 require 'test/unit'
-require_gem "actionpack"
-require_gem "actionmailer"
+gem "actionpack"
+gem "actionmailer"
+gem "activesupport"
+require "active_support"
+require "action_pack"
+require "action_mailer"
 require "init"
 
 class Emailer < ActionMailer::Base
 	def email(h)
-		recipients h[:recipients]
-		subject    h[:subject]
-		from       h[:from]
-		part :content_type => "text/plain", :body => h[:body]
+		recipients   h[:recipients]
+		subject      h[:subject]
+		from         h[:from]
+		body         h[:body]
+		content_type "text/plain"
 	end
 end
 
