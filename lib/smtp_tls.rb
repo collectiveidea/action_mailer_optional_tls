@@ -21,7 +21,7 @@ Net::SMTP.class_eval do
         do_finish
       end
     else
-      send start_method helo, user, secret, authtype
+      send start_method, helo, user, secret, authtype
       return self
     end
   end
