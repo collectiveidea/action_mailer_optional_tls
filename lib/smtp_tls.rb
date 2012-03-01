@@ -31,9 +31,9 @@ Net::SMTP.class_eval do
   def do_tls_start(helodomain, user, secret, authtype)
     raise IOError, 'SMTP session already started' if @started
     
-    if VERSION == '1.8.6'
+    if defined?(VERSION) && VERSION == '1.8.6'
       check_auth_args user, secret, authtype if user or secret
-    elsif VERSION == '1.8.7'
+    else
       check_auth_args user, secret
     end
 
